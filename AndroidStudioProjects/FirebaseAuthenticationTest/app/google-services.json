@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "138142974145",
+    "project_id": "authentication-test-f8753",
+    "storage_bucket": "authentication-test-f8753.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138142974145:android:ce76c33b35dcc3787cd440",
+        "android_client_info": {
+          "package_name": "com.timplifier.firebaseauthenticationtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138142974145-sq3eqtuvv0uthuovk1puq6617s0a4i9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBFCSgbFGp64taV7dTGgcVA3yqgdd_lpo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138142974145-sq3eqtuvv0uthuovk1puq6617s0a4i9p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
