@@ -3,12 +3,18 @@ plugins {
     // Application
     id(libs.plugins.agp.application.get().pluginId)
 
+
     // Kotlin
     id("kotlin-android")
 
+    // Kapt
+    id("kotlin-kapt")
+
+    // Hilt
+    id(libs.plugins.hilt.android.get().pluginId)
+
     // Google Services
     id(libs.plugins.google.services.get().pluginId)
-
 }
 
 android {
@@ -57,14 +63,19 @@ dependencies {
     implementation(libs.bundles.navigation)
 
     // Coroutines
-    implementation(libs.coroutines.android)
+    implementation(libs.bundles.coroutines)
 
     // Lifecycle
     implementation(libs.bundles.lifecycle)
 
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
+    // Firebase Authentication
+    implementation(libs.bundles.firebase)
+
     // Firebase Platform BoM
     implementation(platform(libs.firebase.platform))
 
-    // Firebase Authentication
-    implementation(libs.firebase.auth)
 }
