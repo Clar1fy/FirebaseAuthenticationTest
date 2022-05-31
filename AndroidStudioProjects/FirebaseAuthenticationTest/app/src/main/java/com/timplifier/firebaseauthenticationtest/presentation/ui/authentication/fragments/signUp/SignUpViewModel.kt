@@ -2,67 +2,42 @@ package com.timplifier.firebaseauthenticationtest.presentation.ui.authentication
 
 import android.content.Context
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.timplifier.firebaseauthenticationtest.data.repositories.authentication.AuthRepositoryImpl
+import com.timplifier.firebaseauthenticationtest.domain.useCases.IsUserAuthenticatedUseCase
 import com.timplifier.firebaseauthenticationtest.presentation.base.BaseViewModel
-import java.util.concurrent.TimeUnit
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SignUpViewModel constructor() : BaseViewModel() {
-    private val auth = FirebaseAuth.getInstance()
-    fun startPhoneNumberVerification(
-        phoneNumber: String,
-        firebaseAuth: FirebaseAuth,
-        activity: FragmentActivity,
-        callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
-    ) {
-        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(activity)
-            .setCallbacks(callbacks)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    val firebaseAuth: FirebaseAuth,
+    private val authRepositoryImpl: AuthRepositoryImpl,
+    private val isUserAuthenticatedUseCase: IsUserAuthenticatedUseCase,
+) : BaseViewModel() {
+    fun setRussianLanguageCode() {
+        firebaseAuth.setLanguageCode("ru")
     }
 
-    fun verifyPhoneNumberUsingCode(verificationId: String, smsCode: String) {
-        val credential =
-            PhoneAuthProvider.getCredential(verificationId, smsCode)
-        signInWithPhoneAuthCredential(credential)
-    }
+    fun signUp() = isUserAuthenticatedUseCase()
+    fun provideCallback(
+        context: Context
+    ) = authRepositoryImpl.provideAuthCallback(
+        authenticationSucceed = {
+            Toast.makeText(context, "You have requested verification code", Toast.LENGTH_SHORT)
+                .show()
+        },
+        authInvalidCredentialsError = {
+            Toast.makeText(context, "You have entered the wrong number", Toast.LENGTH_SHORT).show()
 
-    fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, context: Context? = null) {
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        },
+        tooManyRequestsError = {
 
-                    val user = task.result?.user
-                } else
-                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        Toast.makeText(
-                            context,
-                            "The verification code entered was invalid",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-            }
-
-
-    }
-
-    fun resendVerificationCode(
-        phoneNumber: String,
-        token: PhoneAuthProvider.ForceResendingToken,
-        activity: FragmentActivity,
-        callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
-    ) {
-        val options = PhoneAuthOptions.newBuilder()
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(activity)
-            .setCallbacks(callbacks)
-            .setForceResendingToken(token)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
+            Toast.makeText(
+                context,
+                "You have exceeded verification code request limit",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    )
 }

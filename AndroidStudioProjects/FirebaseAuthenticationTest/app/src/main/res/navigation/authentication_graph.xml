@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/authentication_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/authentication_graph"
+    app:startDestination="@id/signUpFragment">
 
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.timplifier.firebaseauthenticationtest.presentation.ui.authentication.fragments.signUp.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_signUpFragment_to_phoneVerificationDialogFragment"
+            app:destination="@id/phoneVerificationDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/phoneVerificationDialogFragment"
+        android:name="com.timplifier.firebaseauthenticationtest.presentation.ui.authentication.fragments.signUp.PhoneVerificationDialogFragment"
+        android:label="fragment_phone_verification_dialog"
+        tools:layout="@layout/fragment_phone_verification_dialog">
+        <action
+            android:id="@+id/action_phoneVerificationDialogFragment_to_verifyAuthenticationFragment"
+            app:destination="@id/verifyAuthenticationFragment"
+            app:popUpTo="@id/authentication_graph"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="inputPhoneNumber"
+            app:argType="string" />
+    </dialog>
+    <fragment
+        android:id="@+id/verifyAuthenticationFragment"
+        android:name="com.timplifier.firebaseauthenticationtest.presentation.ui.authentication.fragments.verifying.VerifyAuthenticationFragment"
+        android:label="fragment_verify_authentication"
+        tools:layout="@layout/fragment_verify_authentication">
+
+        <argument
+            android:name="phoneNumber"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_verifyAuthenticationFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.timplifier.firebaseauthenticationtest.presentation.ui.authentication.fragments.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

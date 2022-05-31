@@ -13,6 +13,9 @@ plugins {
     // Hilt
     id(libs.plugins.hilt.android.get().pluginId)
 
+    // SafeArgs
+    id(libs.plugins.navigation.safeArgs.get().pluginId)
+
     // Google Services
     id(libs.plugins.google.services.get().pluginId)
 }
@@ -69,13 +72,15 @@ dependencies {
     implementation(libs.bundles.lifecycle)
 
     // Hilt
-    implementation(libs.hilt.android)
+    implementation(libs.bundles.hilt)
     kapt(libs.hilt.compiler)
 
     // Firebase Authentication
-    implementation(libs.bundles.firebase)
+    implementation(libs.bundles.firebaseNoCrashlytics)
 
     // Firebase Platform BoM
     implementation(platform(libs.firebase.platform))
 
+    // Masked EditText
+    implementation(libs.ui.maskedEditText)
 }

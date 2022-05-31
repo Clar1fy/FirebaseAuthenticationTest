@@ -3,13 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/signUpFragment">
+    tools:ignore="InvalidNavigation">
 
-    <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.timplifier.firebaseauthenticationtest.presentation.ui.authentication.fragments.signUp.SignUpFragment"
-        android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
 
     <fragment
         android:id="@+id/mainFlowFragment"
@@ -21,13 +16,11 @@
         android:name="com.timplifier.firebaseauthenticationtest.presentation.ui.authentication.AuthenticationFlowFragment"
         android:label="fragment_authentication_flow"
         tools:layout="@layout/fragment_authentication_flow">
+
         <action
-            android:id="@+id/action_authenticationFlowFragment_to_verifyAuthenticationFragment2"
-            app:destination="@id/verifyAuthenticationFragment" />
+            android:id="@+id/action_authenticationFlowFragment_to_mainFlowFragment"
+            app:destination="@id/mainFlowFragment"
+            app:popUpTo="@id/nav_graph" />
     </fragment>
-    <fragment
-        android:id="@+id/verifyAuthenticationFragment"
-        android:name="com.timplifier.firebaseauthenticationtest.presentation.ui.authentication.fragments.verifying.VerifyAuthenticationFragment"
-        android:label="fragment_verify_authentication"
-        tools:layout="@layout/fragment_verify_authentication" />
+
 </navigation>

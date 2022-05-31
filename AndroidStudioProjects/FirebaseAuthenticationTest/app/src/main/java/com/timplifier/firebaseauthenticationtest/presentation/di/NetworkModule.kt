@@ -15,6 +15,4 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideFirebaseAuth() = Firebase.auth
-
-
 }

@@ -1,23 +1,64 @@
 package com.timplifier.firebaseauthenticationtest.presentation.ui.authentication.fragments.signUp
 
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.firebaseauthenticationtest.R
 import com.example.firebaseauthenticationtest.databinding.FragmentPhoneVerificationDialogBinding
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
 import com.timplifier.firebaseauthenticationtest.presentation.base.BaseDialogFragment
+import com.timplifier.firebaseauthenticationtest.presentation.extensions.directionsSafeNavigation
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 
+@AndroidEntryPoint
 class PhoneVerificationDialogFragment :
-    BaseDialogFragment<FragmentPhoneVerificationDialogBinding>(R.layout.fragment_phone_verification_dialog) {
+    BaseDialogFragment<FragmentPhoneVerificationDialogBinding, SignUpViewModel>(R.layout.fragment_phone_verification_dialog) {
     override val binding by viewBinding(FragmentPhoneVerificationDialogBinding::bind)
-    override fun setupListeners() {
-        setupEditPhoneNumberListener()
+    override val viewModel: SignUpViewModel by hiltNavGraphViewModels(R.id.authentication_graph)
+    private var smsCode: String? = null
+    private val args: PhoneVerificationDialogFragmentArgs by navArgs()
+    override fun assembleViews() {
+        binding.tvEnteredNumber.text = args.inputPhoneNumber
     }
 
-    private fun setupEditPhoneNumberListener() {
+
+    override fun setupListeners() {
+        returnToPhoneEditor()
+        proceedToPhoneVerification()
+    }
+
+
+    private fun returnToPhoneEditor() {
         binding.tvEditPhoneNumber.setOnClickListener {
-            findNavController().navigate(R.id.signUpFragment)
+            findNavController().navigateUp()
         }
+    }
+
+    private fun proceedToPhoneVerification() {
+        binding.tvContinue.setOnClickListener {
+            startPhoneNumberVerification()
+            findNavController().directionsSafeNavigation(
+                PhoneVerificationDialogFragmentDirections.actionPhoneVerificationDialogFragmentToVerifyAuthenticationFragment(
+                    args.inputPhoneNumber
+                )
+            )
+        }
+    }
+
+    private fun startPhoneNumberVerification() {
+        viewModel.setRussianLanguageCode()
+        val options = PhoneAuthOptions.newBuilder(viewModel.firebaseAuth)
+            .setPhoneNumber(args.inputPhoneNumber)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(requireActivity())
+            .setCallbacks(viewModel.provideCallback(requireContext()))
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
+
     }
 
 }
